@@ -2,6 +2,9 @@
 // npm install body-parser --save
 // npm install node-storage --save
 
+var fontColor = '#eeeeee';
+
+var fs = require('fs');
 var storage = require('node-storage');
 var store = new storage('./mcc.db');
 var express = require("express");
@@ -43,6 +46,11 @@ app.get('/', function (request, response) {
   response.end();
 });
 
+app.get('/HammerTime.png', function (request, response) {
+     var img = fs.readFileSync('./HammerTime.png');
+     response.writeHead(200, {'Content-Type': 'image/gif' });
+     response.end(img, 'binary');
+	 });
 
 app.get('/scoreboard.json', function (request, response) {
   response.json({
@@ -80,7 +88,7 @@ app.get('/scoreboard', function (request, response) {
         ctx.fillText(scoreboard.red_team.score + ' ' + scoreboard.red_team.skip_name, 170, 180); \
         ctx.fillText(scoreboard.yellow_team.score + ' ' + scoreboard.yellow_team.skip_name, 170, 250); \
         ctx.font='bold 34px Verdana'; \
-        ctx.fillStyle='white'; \
+        ctx.fillStyle='" + fontColor + "'; \
         ctx.fillText(scoreboard.end, 280, 305); \
         ctx.font='bold 30px Verdana'; \
         ctx.textAlign = 'center'; \
@@ -113,12 +121,14 @@ app.post('/', function (request, response) {
   writeHeader(response);
   writeScore(response);
   writeForm(response);
+  console.log(request);
+  response.write('hammer:' + request.body.hammerChoice);
   response.write('</body></html>');
   response.end();
 });
 
-app.listen(8080, '0.0.0.0', function () {
- console.log('Listening on 8080');
+app.listen(80, '0.0.0.0', function () {
+ console.log('Listening on 80');
 });
 
 function writeHeader(response) {
@@ -128,7 +138,10 @@ response.write('<html>' +
 '<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">' +
 '<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>' +
 '<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>' +
-'<style>body {font-family: Verdana, Arial;}</style>' +
+'<style>body {font-family: Verdana, Arial;}' +
+'\n#redscore-button {background-color:red; color:white;}' +
+'\n#yelscore-button {background-color:yellow; color:black;}' +
+'</style>' +
 '</head><body>'
 );
 }
@@ -140,8 +153,10 @@ if (store.get('end')=='FF') {
   {strEnd = 'End ' + store.get('end') }
 
 
-response.write('<html><head>></head>' +
-'<body><canvas id="myCanvas" width="540" height="320" ' +
+response.write('<html><head></head>' +
+'<body>' +
+'<img id="hammer" src="HammerTime.png" style="position:absolute;left:500px;top:160px;">' +
+'<canvas id="myCanvas" width="540" height="320" ' +
 'style="border:0px solid #d3d3d3; background-color">' +
 '\nYour browser does not support the HTML5 canvas tag.</canvas>' +
 '\n<script>' +
@@ -152,7 +167,7 @@ response.write('<html><head>></head>' +
 '\nctx.fillText("' + store.get('redscore') + ' ' + store.get('redname') + '",170,180);' +
 '\nctx.fillText("' + store.get('yelscore') + ' ' + store.get('yelname') + '",170,250);' +
 '\nctx.font="bold 34px Verdana";' +
-'\nctx.fillStyle="white";' +
+'\nctx.fillStyle="' + fontColor + '";' +  
 '\nctx.fillText("' + strEnd + '",280,305);' +
 '\nctx.font="bold 30px Verdana";' +
 '\nctx.textAlign="center";' +
@@ -179,6 +194,13 @@ response.write('<table id="myTable" width="90%" ' +
 function writeForm(response) {
 response.write('<div style="margin: 10px;"><form action="./" method="post" data-ajax="false">' +
 '\n  <input type="submit" value="Submit"><br />' +
+'\n<fieldset data-role="controlgroup" data-type="horizontal" id="hammer" name="hammer">' + 
+'<legend>Hammer:</legend>' + 
+'<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red" checked="checked">' + 
+'<label for="hammerChoiceRed" style="background:red">Red</label>' + 
+'<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow">' + 
+'<label for="hammerChoiceYellow" style="background:yellow">Yellow</label>' + 
+'</fieldset>' + 
 '\n  ' + store.get('redname') + ' Score:' + 
 '   <select name="redscore" id="redscore">' +
     '  <option value="0">0</option>' +
@@ -258,3 +280,4 @@ function resetmatch() {
 	store.put('end','0');
 
 }
+
