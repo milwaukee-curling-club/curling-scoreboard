@@ -51,7 +51,7 @@ app.get('/HammerTime.png', function (request, response) {
      var img = fs.readFileSync('./HammerTime.png');
      response.writeHead(200, {'Content-Type': 'image/gif' });
      response.end(img, 'binary');
-	 });
+});
 
 app.get('/scoreboard.json', function (request, response) {
   response.json({
