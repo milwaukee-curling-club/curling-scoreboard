@@ -9,6 +9,7 @@ var storage = require('node-storage');
 var store = new storage('./mcc.db');
 var express = require("express");
 var app = express()
+app.set('view engine', 'ejs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -69,44 +70,7 @@ app.get('/scoreboard.json', function (request, response) {
 })
 
 app.get('/scoreboard', function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/html"});
-  writeCanvas(response);
-  response.write("<script> \
-    setInterval(function() { \
-      var request = new XMLHttpRequest(); \
-      request.open('GET', '/scoreboard.json', true); \
-      request.onload = function() { \
-      if (request.status >= 200 && request.status < 400) { \
-        console.log(request.responseText); \
-        scoreboard = JSON.parse(request.responseText); \
-        var c = document.getElementById('myCanvas'); \
-        var ctx=c.getContext('2d'); \
-        ctx.clearRect(0, 0, 540, 320); \
-        ctx.font='bold 37px Verdana'; \
-        ctx.fillStyle='black'; \
-        ctx.textAlign = 'left'; \
-        ctx.fillText(scoreboard.red_team.score + ' ' + scoreboard.red_team.skip_name, 170, 180); \
-        ctx.fillText(scoreboard.yellow_team.score + ' ' + scoreboard.yellow_team.skip_name, 170, 250); \
-        ctx.font='bold 34px Verdana'; \
-        ctx.fillStyle='" + fontColor + "'; \
-        ctx.fillText(scoreboard.end, 280, 305); \
-        ctx.font='bold 30px Verdana'; \
-        ctx.textAlign = 'center'; \
-        ctx.fillText(scoreboard.match_name, 250, 50); \
-        ctx.fillText(scoreboard.draw_name, 250, 90); \
-      console.log(request.responseText); \
-        var resp = request.responseText; \
-        } else { \
-        console.log('An error occurred!'); \
-       }; \
-       }; \
-    request.onerror = function() { \
-      console.log('An error occurred...'); \
-    }; \
-    request.send(); \
-    }, 5 * 1000); \
-    </script> \
-    ")
+  response.render('scoreboard');
 })
 
 app.post('/', function (request, response) {
@@ -143,38 +107,6 @@ response.write('<html>' +
 '\n#yelscore-button {background-color:yellow; color:black;}' +
 '</style>' +
 '</head><body>'
-);
-}
-
-function writeCanvas(response) {
-if (store.get('end')=='FF') {
-  strEnd = 'Final' } 
-  else 
-  {strEnd = 'End ' + store.get('end') }
-
-
-response.write('<html><head></head>' +
-'<body>' +
-'<img id="hammer" src="HammerTime.png" style="position:absolute;left:500px;top:160px;">' +
-'<canvas id="myCanvas" width="540" height="320" ' +
-'style="border:0px solid #d3d3d3; background-color">' +
-'\nYour browser does not support the HTML5 canvas tag.</canvas>' +
-'\n<script>' +
-'\nvar c=document.getElementById("myCanvas");' +
-'\nvar ctx=c.getContext("2d");' +
-'\nctx.font="bold 37px Verdana";' +
-'\nctx.fillStyle="black";' +
-'\nctx.fillText("' + store.get('redscore') + ' ' + store.get('redname') + '",170,180);' +
-'\nctx.fillText("' + store.get('yelscore') + ' ' + store.get('yelname') + '",170,250);' +
-'\nctx.font="bold 34px Verdana";' +
-'\nctx.fillStyle="' + fontColor + '";' +  
-'\nctx.fillText("' + strEnd + '",280,305);' +
-'\nctx.font="bold 30px Verdana";' +
-'\nctx.textAlign="center";' +
-'\nctx.fillText("' + store.get('matchname') + '",250,50);' +
-'\nctx.textAlign="center";' +
-'\nctx.fillText("' + store.get('drawname') + '",250,90);' +
-'\n</script>'
 );
 }
 
