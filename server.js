@@ -44,10 +44,61 @@ app.get('/', function (request, response) {
 });
 
 
-app.get('/score', function (request, response) {
+app.get('/scoreboard.json', function (request, response) {
   response.json({
-    test: 'test'
+    match_name: store.get('matchname'),
+    draw_name: store.get('drawname'),
+    red_team: {
+      skip_name: store.get('redname'),
+      score: store.get('redscore')
+    },
+    yellow_team: {
+      skip_name: store.get('yelname'),
+      score: store.get('yelscore')
+    },
+    end: store.get('end') == 'FF' ? 'Final' : 'End ' + store.get('end')
   })
+})
+
+app.get('/scoreboard', function (request, response) {
+  response.writeHead(200, {"Content-Type": "text/html"});
+  writeCanvas(response);
+  response.write("<script> \
+    setInterval(function() { \
+      var request = new XMLHttpRequest(); \
+      request.open('GET', '/scoreboard.json', true); \
+      request.onload = function() { \
+      if (request.status >= 200 && request.status < 400) { \
+        console.log(request.responseText); \
+        scoreboard = JSON.parse(request.responseText); \
+        var c = document.getElementById('myCanvas'); \
+        var ctx=c.getContext('2d'); \
+        ctx.clearRect(0, 0, 540, 320); \
+        ctx.font='bold 37px Verdana'; \
+        ctx.fillStyle='black'; \
+        ctx.textAlign = 'left'; \
+        ctx.fillText(scoreboard.red_team.score + ' ' + scoreboard.red_team.skip_name, 170, 180); \
+        ctx.fillText(scoreboard.yellow_team.score + ' ' + scoreboard.yellow_team.skip_name, 170, 250); \
+        ctx.font='bold 34px Verdana'; \
+        ctx.fillStyle='white'; \
+        ctx.fillText(scoreboard.end, 280, 305); \
+        ctx.font='bold 30px Verdana'; \
+        ctx.textAlign = 'center'; \
+        ctx.fillText(scoreboard.match_name, 250, 50); \
+        ctx.fillText(scoreboard.draw_name, 250, 90); \
+      console.log(request.responseText); \
+        var resp = request.responseText; \
+        } else { \
+        console.log('An error occurred!'); \
+       }; \
+       }; \
+    request.onerror = function() { \
+      console.log('An error occurred...'); \
+    }; \
+    request.send(); \
+    }, 5 * 1000); \
+    </script> \
+    ")
 })
 
 app.post('/', function (request, response) {
@@ -89,7 +140,7 @@ if (store.get('end')=='FF') {
   {strEnd = 'End ' + store.get('end') }
 
 
-response.write('<html><head><meta http-equiv="refresh" content="5"></head>' +
+response.write('<html><head>></head>' +
 '<body><canvas id="myCanvas" width="540" height="320" ' +
 'style="border:0px solid #d3d3d3; background-color">' +
 '\nYour browser does not support the HTML5 canvas tag.</canvas>' +
