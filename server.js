@@ -71,6 +71,7 @@ app.get('/scoreboard.json', function (request, response) {
 
 app.get('/scoreboard', function (request, response) {
   response.render('scoreboard');
+  response.end();
 })
 
 app.post('/', function (request, response) {
