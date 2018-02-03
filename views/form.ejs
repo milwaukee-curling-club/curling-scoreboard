@@ -25,9 +25,9 @@ style="border:0px solid #d3d3d3;padding: 0px; margin: 0px; font-size: 24px;">
   <input type="submit" value="Submit"><br />
 <fieldset data-role="controlgroup" data-type="horizontal" id="hammer" name="hammer"> 
 <legend>Hammer:</legend> 
-<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red" checked="checked"> 
+<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red"<%= hammer == "red" ? " checked" : ""%>> 
 <label for="hammerChoiceRed" style="background:red">Red</label> 
-<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow"> 
+<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow"<%= hammer == "yellow" ? " checked" : ""%>> 
 <label for="hammerChoiceYellow" style="background:yellow">Yellow</label> 
 </fieldset> 
     <%=redname%> Score: 
