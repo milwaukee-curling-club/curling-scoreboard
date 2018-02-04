@@ -12,6 +12,18 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('assets'))
 
+// if the store is empty, reset the database
+function isEmpty(map) {
+    for (var key in map) {
+        return !map.hasOwnProperty(key);
+    }
+    return true;
+}
+
+if (isEmpty(store.store)) {
+    resetmatch();
+}
+
 app.listen(PORT, '0.0.0.0', function () {
  console.log("Listening on port " + PORT);
 });
