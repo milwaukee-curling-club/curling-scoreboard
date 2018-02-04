@@ -4,6 +4,8 @@ Curling scoreboard provides a webview for OBS Studio with a mobile friendly admi
 
 [See the scoreboard in use on YouTube](https://www.youtube.com/watch?v=G2kUNVGTSjA)
 
+[Demo](https://curling-scoreboard.herokuapp.com/)
+
 ## Getting Started
 
 ### Prerequisites
