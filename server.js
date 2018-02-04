@@ -1,9 +1,6 @@
-// npm install express --save
-// npm install body-parser --save
-// npm install node-storage --save
+const PORT = process.env.PORT || 80 
 
 var fontColor = '#eeeeee';
-
 var fs = require('fs');
 var storage = require('node-storage');
 var store = new storage('./mcc.db');
@@ -14,6 +11,10 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('assets'))
+
+app.listen(PORT, '0.0.0.0', function () {
+ console.log("Listening on port " + PORT);
+});
 
 // Display IP address
 var os = require('os');
@@ -97,9 +98,6 @@ app.post('/', function (request, response) {
   response.end();
 });
 
-app.listen(80, '0.0.0.0', function () {
- console.log('Listening on 80');
-});
 
 function resetmatch() {
 	store.put('matchname','Enter Match Name');
