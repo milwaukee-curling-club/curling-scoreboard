@@ -18,7 +18,7 @@ The first thing you'll need to do is install/compile all of the dependencies in 
 
 ## Usage
 
-1. `npm start` (or `PORT=3000 npm start` to use a custom port)
+1. `npm start` (or `PORT=3000 npm start` to use a custom port) Default port is 80
 1. Go to the server (either localhost or the IP address of the machine running the server)
 1. Update the form to match the match details
 1. Visit `/scoreboard` to view the scoreboard
