@@ -25,10 +25,12 @@ function refreshScoreboard() {
       ctx.textAlign = 'center';
       ctx.fillText(scoreboard.match_name, 250, 50);
       ctx.fillText(scoreboard.draw_name, 250, 90);
-      height = scoreboard.hammer == 'red' ? 150 : 225
-      var image = new Image
-      image.onload = function() { ctx.drawImage(image, 500, height, 30, 30); }
-      image.src = 'images/hammer.svg'
+      if (scoreboard.end != "End 0" && scoreboard.end != "Final") {
+        height = scoreboard.hammer == 'red' ? 150 : 225;
+        var image = new Image;
+        image.onload = function() { ctx.drawImage(image, 500, height, 30, 30); }
+        image.src = 'images/hammer.svg';
+      }
     } else {
       console.log('An error occurred!');
     };
