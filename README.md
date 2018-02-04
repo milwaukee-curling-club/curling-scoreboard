@@ -2,6 +2,8 @@
 
 Curling scoreboard provides a webview for OBS Studio with a mobile friendly admin interface to update the score in real time.
 
+[See the scoreboard in use on YouTube](https://www.youtube.com/watch?v=G2kUNVGTSjA)
+
 ## Getting Started
 
 ### Prerequisites
