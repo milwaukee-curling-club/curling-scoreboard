@@ -1,9 +1,6 @@
-// npm install express --save
-// npm install body-parser --save
-// npm install node-storage --save
+const PORT = process.env.PORT || 80 
 
 var fontColor = '#eeeeee';
-
 var fs = require('fs');
 var storage = require('node-storage');
 var store = new storage('./mcc.db');
@@ -13,6 +10,23 @@ app.set('view engine', 'ejs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('assets'))
+
+// if the store is empty, reset the database
+function isEmpty(map) {
+    for (var key in map) {
+        return !map.hasOwnProperty(key);
+    }
+    return true;
+}
+
+if (isEmpty(store.store)) {
+    resetmatch();
+}
+
+app.listen(PORT, '0.0.0.0', function () {
+ console.log("Listening on port " + PORT);
+});
 
 // Display IP address
 var os = require('os');
@@ -44,16 +58,10 @@ app.get('/', function (request, response) {
 	  yelscore: store.get('yelscore'), 
 	  redname: store.get('redname'), 
 	  yelname: store.get('yelname'), 
-	  end: store.get('end')
-	  
+	  end: store.get('end'),
+      hammer: store.get('hammer')
 	});
   });
-
-app.get('/HammerTime.png', function (request, response) {
-     var img = fs.readFileSync('./HammerTime.png');
-     response.writeHead(200, {'Content-Type': 'image/gif' });
-     response.end(img, 'binary');
-});
 
 app.get('/scoreboard.json', function (request, response) {
   response.json({
@@ -67,7 +75,8 @@ app.get('/scoreboard.json', function (request, response) {
       skip_name: store.get('yelname'),
       score: store.get('yelscore')
     },
-    end: store.get('end') == 'FF' ? 'Final' : 'End ' + store.get('end')
+      end: store.get('end') == 'FF' ? 'Final' : 'End ' + store.get('end'),
+      hammer: store.get('hammer')
   })
 })
 
@@ -83,33 +92,24 @@ app.post('/', function (request, response) {
 	store.put('yelscore',request.body.yelscore);
 	store.put('redname',request.body.redname);
 	store.put('yelname',request.body.yelname);
-	store.put('end',request.body.end);
+    store.put('end',request.body.end);
+    store.put('hammer', request.body.hammerChoice);
   response.render('form',
     { 
-	  matchname:store.get('matchname') ,
-	  drawname: store.get('drawname'), 
-	  redscore: store.get('redscore'), 
-	  yelscore: store.get('yelscore'), 
-	  redname: store.get('redname'), 
-	  yelname: store.get('yelname'), 
-	  end: store.get('end')
-	  
+        matchname:store.get('matchname') ,
+        drawname: store.get('drawname'), 
+        redscore: store.get('redscore'), 
+        yelscore: store.get('yelscore'), 
+        redname: store.get('redname'), 
+        yelname: store.get('yelname'), 
+        end: store.get('end'),
+        hammer: store.get('hammer')
 	}
   );
 
-
-//  writeHeader(response);
-//  writeScore(response);
-//  writeForm(response);
-  console.log(request);
-//  response.write('hammer:' + request.body.hammerChoice);
-//  response.write('</body></html>');
   response.end();
 });
 
-app.listen(80, '0.0.0.0', function () {
- console.log('Listening on 80');
-});
 
 function resetmatch() {
 	store.put('matchname','Enter Match Name');
@@ -119,6 +119,4 @@ function resetmatch() {
 	store.put('redname','Enter Red Name');
 	store.put('yelname','Enter Yellow Name');
 	store.put('end','0');
-
 }
-

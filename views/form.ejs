@@ -7,9 +7,18 @@
 <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-<style>body {font-family: Verdana, Arial;}
+<style>
+body {font-family: Verdana, Arial;}
 #redscore-button {background-color:red; color:white;}
 #yelscore-button {background-color:yellow; color:black;}
+label[for=hammerChoiceRed].ui-btn-active {
+  background-color: red !important;
+}
+label[for=hammerChoiceYellow].ui-btn-active {
+  background-color: yellow !important;
+  color: #000 !important;
+  text-shadow: none !important;
+}
 </style>
 </head><body>
 <table id="myTable" width="90%" 
@@ -25,10 +34,10 @@ style="border:0px solid #d3d3d3;padding: 0px; margin: 0px; font-size: 24px;">
   <input type="submit" value="Submit"><br />
 <fieldset data-role="controlgroup" data-type="horizontal" id="hammer" name="hammer"> 
 <legend>Hammer:</legend> 
-<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red" checked="checked"> 
-<label for="hammerChoiceRed" style="background:red">Red</label> 
-<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow"> 
-<label for="hammerChoiceYellow" style="background:yellow">Yellow</label> 
+<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red"<%= hammer == "red" ? " checked" : ""%>> 
+<label for="hammerChoiceRed">Red</label> 
+<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow"<%= hammer == "yellow" ? " checked" : ""%>> 
+<label for="hammerChoiceYellow">Yellow</label> 
 </fieldset> 
     <%=redname%> Score: 
    <select name="redscore" id="redscore">
@@ -89,8 +98,8 @@ style="border:0px solid #d3d3d3;padding: 0px; margin: 0px; font-size: 24px;">
   Draw name: <input type="text" name="drawname" value="<%=drawname%>"><br>
   <input type="submit" value="Submit"><br />
   </form></div>
- <a href="/?reset=yes">Reset Match</a><br />
- <p>To show only the score: querystring    /?showform=no</p>
+ <p><a href="/?reset=yes">Reset Match</a></p>
+ <p><a href="/scoreboard">View Scoreboard</a></p>
 <script>
 $("#redscore").val('<%=redscore%>');
 $("#yelscore").val('<%=yelscore%>');

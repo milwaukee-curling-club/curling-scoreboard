@@ -1,7 +1,6 @@
 <html>
 <head></head>
 <body>
-<img id="hammer" src="HammerTime.png" style="position:absolute;left:500px;top:160px;">
 <canvas id="myCanvas" width="540" height="320"
 style="border:0px solid #d3d3d3; background-color">Your browser does not support the HTML5 canvas tag.</canvas>
 <script>
@@ -10,7 +9,6 @@ function refreshScoreboard() {
   request.open('GET', '/scoreboard.json', true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
-      console.log(request.responseText);
       scoreboard = JSON.parse(request.responseText);
       var c = document.getElementById('myCanvas');
       var ctx=c.getContext('2d');
@@ -27,8 +25,12 @@ function refreshScoreboard() {
       ctx.textAlign = 'center';
       ctx.fillText(scoreboard.match_name, 250, 50);
       ctx.fillText(scoreboard.draw_name, 250, 90);
-      console.log(request.responseText);
-      var resp = request.responseText;
+      if (scoreboard.end != "End 0" && scoreboard.end != "Final") {
+        height = scoreboard.hammer == 'red' ? 150 : 225;
+        var image = new Image;
+        image.onload = function() { ctx.drawImage(image, 500, height, 30, 30); }
+        image.src = 'images/hammer.svg';
+      }
     } else {
       console.log('An error occurred!');
     };
