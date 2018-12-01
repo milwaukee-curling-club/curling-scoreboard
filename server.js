@@ -54,8 +54,8 @@ app.get('/', function (request, response) {
     { 
 	  matchname:store.get('matchname') ,
 	  drawname: store.get('drawname'), 
-	  redscore: store.get('redscore'), 
-	  yelscore: store.get('yelscore'), 
+	  redScore: store.get('redScore'), 
+	  yellowScore: store.get('yellowScore'), 
 	  redname: store.get('redname'), 
 	  yelname: store.get('yelname'), 
 	  end: store.get('end'),
@@ -69,13 +69,13 @@ app.get('/scoreboard.json', function (request, response) {
     draw_name: store.get('drawname'),
     red_team: {
       skip_name: store.get('redname'),
-      score: store.get('redscore')
+      score: store.get('redScore')
     },
     yellow_team: {
       skip_name: store.get('yelname'),
-      score: store.get('yelscore')
+      score: store.get('yellowScore')
     },
-      end: store.get('end') == 'FF' ? 'Final' : 'End ' + store.get('end'),
+      end: store.get('end') == '-1' ? 'Final' : 'End ' + store.get('end'),
       hammer: store.get('hammer')
   })
 })
@@ -88,8 +88,8 @@ app.get('/scoreboard', function (request, response) {
 app.post('/', function (request, response) {
 	store.put('matchname',request.body.matchname);
 	store.put('drawname',request.body.drawname);
-	store.put('redscore',request.body.redscore);
-	store.put('yelscore',request.body.yelscore);
+	store.put('redScore',request.body.redScore);
+	store.put('yellowScore',request.body.yellowScore);
 	store.put('redname',request.body.redname);
 	store.put('yelname',request.body.yelname);
     store.put('end',request.body.end);
@@ -98,8 +98,8 @@ app.post('/', function (request, response) {
     { 
         matchname:store.get('matchname') ,
         drawname: store.get('drawname'), 
-        redscore: store.get('redscore'), 
-        yelscore: store.get('yelscore'), 
+        redScore: store.get('redScore'), 
+        yellowScore: store.get('yellowScore'), 
         redname: store.get('redname'), 
         yelname: store.get('yelname'), 
         end: store.get('end'),
@@ -114,8 +114,8 @@ app.post('/', function (request, response) {
 function resetmatch() {
 	store.put('matchname','Enter Match Name');
 	store.put('drawname','Enter Draw Name');
-	store.put('redscore','0');
-	store.put('yelscore','0');
+	store.put('redScore','0');
+	store.put('yellowScore','0');
 	store.put('redname','Enter Red Name');
 	store.put('yelname','Enter Yellow Name');
 	store.put('end','0');
