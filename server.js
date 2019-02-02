@@ -78,6 +78,30 @@ app.get('/scoreboard', function (request, response) {
   response.end();
 })
 
+app.get('/ticker.json', function (request, response) {
+    sheetIndex = request.query.sheetNumber - 1
+
+    text = store.get('games').map(
+        game => 
+        `${game.red.name} ${game.red.score} - ${game.yellow.name} ${game.yellow.score} &mdash; ${endDisplay(game.end)}`
+    ).join(' || ')
+
+    response.json(
+        {
+            text: text
+        }
+    )
+})
+
+function endDisplay(end) {
+    return end == -1 ? 'Final' : `End: ${end}`
+}
+
+app.get('/ticker', (request, response) => {
+    response.render('ticker')
+    response.end()
+})
+
 app.post('/', function (request, response) {
     store.put('games', request.body.games)
     store.put('matchName', request.body.matchName)
