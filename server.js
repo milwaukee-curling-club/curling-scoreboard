@@ -45,39 +45,32 @@ console.log('Connect your web browser to ' + addresses);
 // End Get IP
 
 app.get('/', function (request, response) {
-  
-  if (request.query.reset == 'yes') {
-	resetmatch();
-  }
+    if (request.query.reset == 'yes') {
+        resetmatch();
+    }
 
-  response.render('form',
-    { 
-	  matchname:store.get('matchname') ,
-	  drawname: store.get('drawname'), 
-	  redScore: store.get('redScore'), 
-	  yellowScore: store.get('yellowScore'), 
-	  redname: store.get('redname'), 
-	  yelname: store.get('yelname'), 
-	  end: store.get('end'),
-      hammer: store.get('hammer')
-	});
-  });
+    response.render(
+        'form',
+        {
+            games: store.get('games'),
+            matchName: store.get('matchName'),
+            drawName: store.get('drawName')
+        }
+    );
+});
 
 app.get('/scoreboard.json', function (request, response) {
-  response.json({
-    match_name: store.get('matchname'),
-    draw_name: store.get('drawname'),
-    red_team: {
-      skip_name: store.get('redname'),
-      score: store.get('redScore')
-    },
-    yellow_team: {
-      skip_name: store.get('yelname'),
-      score: store.get('yellowScore')
-    },
-      end: store.get('end') == '-1' ? 'Final' : 'End ' + store.get('end'),
-      hammer: store.get('hammer')
-  })
+    sheetIndex = request.query.sheetNumber - 1
+
+    response.json(
+        Object.assign(
+            store.get('games')[sheetIndex],
+            {
+                matchName: store.get('matchName'),
+                drawName: store.get('drawName')
+            }
+        )
+    )
 })
 
 app.get('/scoreboard', function (request, response) {
@@ -86,24 +79,15 @@ app.get('/scoreboard', function (request, response) {
 })
 
 app.post('/', function (request, response) {
-	store.put('matchname',request.body.matchname);
-	store.put('drawname',request.body.drawname);
-	store.put('redScore',request.body.redScore);
-	store.put('yellowScore',request.body.yellowScore);
-	store.put('redname',request.body.redname);
-	store.put('yelname',request.body.yelname);
-    store.put('end',request.body.end);
-    store.put('hammer', request.body.hammerChoice);
+    store.put('games', request.body.games)
+    store.put('matchName', request.body.matchName)
+    store.put('drawName', request.body.drawName);
+
   response.render('form',
-    { 
-        matchname:store.get('matchname') ,
-        drawname: store.get('drawname'), 
-        redScore: store.get('redScore'), 
-        yellowScore: store.get('yellowScore'), 
-        redname: store.get('redname'), 
-        yelname: store.get('yelname'), 
-        end: store.get('end'),
-        hammer: store.get('hammer')
+      { 
+          games: store.get('games'),
+          matchName:store.get('matchName') ,
+          drawName: store.get('drawName'), 
 	}
   );
 
@@ -112,11 +96,31 @@ app.post('/', function (request, response) {
 
 
 function resetmatch() {
-	store.put('matchname','Enter Match Name');
-	store.put('drawname','Enter Draw Name');
-	store.put('redScore','0');
-	store.put('yellowScore','0');
-	store.put('redname','Enter Red Name');
-	store.put('yelname','Enter Yellow Name');
-	store.put('end','0');
+    store.put('matchName', 'Match Name')
+    store.put('drawName', 'Draw Name')
+
+    const defaultGame = {
+        primary: false,
+        red: {
+            name: 'Red Team',
+            score: 0
+        },
+        yellow: {
+            score: 0,
+            name: 'Yellow Team'
+        },
+        end: 0,
+        hammer: 'red'
+    }
+
+    let defaultGames = []
+
+    for(let i = 0; i < 5; i++) {
+        defaultGames[i] = defaultGame;
+    }
+
+    store.put(
+        'games',
+        defaultGames
+    )
 }
