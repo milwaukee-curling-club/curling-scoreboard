@@ -3,39 +3,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+<p><a href="/?reset=yes">Reset Match</a></p>
 <form action="./" method="post" data-ajax="false">
+Match name: <input type="text" name="matchName" value="<%= matchName %>"><br>
+Draw name: <input type="text" name="drawName" value="<%= drawName %>"><br>
+<input type="submit" value="Submit"><br />
+
+<% for(i = 0; i < games.length; i++) { %>
+<fieldset>
+<legend>Sheet <%= i + 1 %></legend>
+<%= games[i]['red']['name'] %> Score: 
+<div class="number-input-group">
+  <input type="button" value="-" class="button-minus">
+  <input type="number" step="1" max="" value="<%= games[i]['red']['score'] %>" name="games[<%= i %>][red][score]"/>
+  <input type="button" value="+" class="button-plus">
+</div>
+<%= games[i]['yellow']['name'] %> Score: 
+<div class="number-input-group">
+  <input type="button" value="-" class="button-minus">
+  <input type="number" step="1" max="" value="<%= games[i]['yellow']['score'] %>" name="games[<%= i %>][yellow][score]"/>
+  <input type="button" value="+" class="button-plus">
+</div>
 <fieldset data-role="controlgroup" data-type="horizontal" id="hammer" name="hammer"> 
 <legend>Hammer:</legend> 
-<input type="radio" name="hammerChoice" id="hammerChoiceRed" value="red"<%= hammer == "red" ? " checked" : ""%>> 
-<label for="hammerChoiceRed">Red</label> 
-<input type="radio" name="hammerChoice" id="hammerChoiceYellow" value="yellow"<%= hammer == "yellow" ? " checked" : ""%>> 
-<label for="hammerChoiceYellow">Yellow</label> 
+<label>
+<input type="radio" name="games[<%= i %>][hammer]" id="hammerChoiceRed" value="red"<%= games[i]['hammer'] == "red" ? " checked" : ""%>> 
+Red</label>
+<label>
+<input type="radio" name="games[<%= i %>][hammer]" id="hammerChoiceYellow" value="yellow"<%= games[i]['hammer'] == "yellow" ? " checked" : "" %>>
+Yellow</label> 
 </fieldset> 
-<%=redname%> Score: 
-<div class="number-input-group">
-  <input type="button" value="-" class="button-minus">
-  <input type="number" step="1" max="" value="<%= redScore %>" name="redScore"/>
-  <input type="button" value="+" class="button-plus">
-</div>
-<%=yelname%>  Score:  
-<div class="number-input-group">
-  <input type="button" value="-" class="button-minus">
-  <input type="number" step="1" max="" value="<%= yellowScore %>" name="yellowScore"/>
-  <input type="button" value="+" class="button-plus">
-</div>
 End: 
 <div class="number-input-group">
   <input type="button" value="-" class="button-minus">
-  <input type="number" step="1" max="" value="<%= end %>" name="end"/>
+  <input type="number" step="1" max="" value="<%= games[i]['end'] %>" name="games[<%= i %>][end]"/>
   <input type="button" value="+" class="button-plus">
 </div>
 </select><br />
-<input type="text" name="redname"  value="<%=redname%>"><br>
-<input type="text" name="yelname"  value="<%=yelname%>"><br>
-Match name: <input type="text" name="matchname" value="<%=matchname%>"><br>
-Draw name: <input type="text" name="drawname" value="<%=drawname%>"><br>
-<input type="submit" value="Submit"><br />
+<input type="text" name="games[<%= i %>][red][name]" value="<%= games[i]['red']['name'] %>"><br>
+<input type="text" name="games[<%= i %>][yellow][name]" value="<%= games[i]['yellow']['name'] %>"><br>
+<input type="submit" value="Submit">
+<p><a href="/scoreboard?sheetNumber=<%= i + 1 %>" target=_blank>View Scoreboard</a></p>
+</fieldset>
+<% } %>
 </form>
-<p><a href="/?reset=yes">Reset Match</a></p>
-<p><a href="/scoreboard">View Scoreboard</a></p>
 <script src="/javascripts/index.js"></script>
