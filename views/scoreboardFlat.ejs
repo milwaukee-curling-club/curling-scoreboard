@@ -1,7 +1,8 @@
 <html>
 <head></head>
+<!-- <body background="/images/image.png"> -->
 <body>
-<canvas id="myCanvas" width="540" height="320"
+<canvas id="myCanvas" width="1280" height="700"
 style="border:0px solid #d3d3d3; background-color">Your browser does not support the HTML5 canvas tag.</canvas>
 <script>
 function getUrlVars() {
@@ -18,6 +19,7 @@ function getUrlParam(parameter, defaultvalue) {
   }
   return urlparameter;
 }
+
 function refreshScoreboard() {
   var request = new XMLHttpRequest();
   request.open('GET', '/scoreboard.json?sheetNumber=' + getUrlParam('sheetNumber', 3), true);
@@ -26,23 +28,27 @@ function refreshScoreboard() {
       scoreboard = JSON.parse(request.responseText);
       var c = document.getElementById('myCanvas');
       var ctx=c.getContext('2d');
-      ctx.clearRect(0, 0, 540, 320);
-      ctx.font='bold 37px Verdana';
-      ctx.fillStyle='black';
+      ctx.clearRect(0, 0, 1280, 700);
+      ctx.font='bold 33px Arial';
+      ctx.fillStyle='#ddd';
       ctx.textAlign = 'left';
-      ctx.fillText(scoreboard.red.score + ' ' + scoreboard.red.name, 170, 180);
-      ctx.fillText(scoreboard.yellow.score + ' ' + scoreboard.yellow.name, 170, 250);
-      ctx.font='bold 34px Verdana';
-      ctx.fillStyle = '#eeeeee';
-      ctx.fillText(scoreboard.end, 280, 305);
-      ctx.font='bold 30px Verdana';
-      ctx.textAlign = 'center';
-      ctx.fillText(scoreboard.matchName, 250, 50);
-      ctx.fillText(scoreboard.drawName, 250, 90);
+      ctx.fillText(scoreboard.red.name, 120, 30);
+	  ctx.fillText(scoreboard.red.score, 450, 30);
+      ctx.fillText(scoreboard.yellow.score, 760, 30);
+	  ctx.fillText(scoreboard.yellow.name, 840, 30);
+      ctx.font='bold 30px Arial';
+      ctx.fillStyle = '#222';
+	  ctx.textAlign = 'center';
+      ctx.fillText('End '+scoreboard.end, 640, 30);
+      ctx.font='bold 19px Verdana';
+      ctx.fillStyle='#ddd';
+	  ctx.textAlign = 'center';
+      ctx.fillText(scoreboard.matchName, 640, 68);
+      ctx.fillText(scoreboard.drawName, 640, 87);
       if (scoreboard.end != "End 0" && scoreboard.end != "Final") {
-        height = scoreboard.hammer == 'red' ? 150 : 225;
+        strLocation = scoreboard.hammer == 'red' ? 45 : 1180;
         var image = new Image;
-        image.onload = function() { ctx.drawImage(image, 500, height, 30, 30); }
+        image.onload = function() { ctx.drawImage(image, strLocation, 5, 30, 30); }
         image.src = 'images/hammer.svg';
       }
     } else {
