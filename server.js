@@ -78,6 +78,11 @@ app.get('/scoreboard', function (request, response) {
   response.end();
 })
 
+app.get('/scoreboardFlat', function (request, response) {
+  response.render('scoreboardFlat');
+  response.end();
+})
+
 app.get('/ticker.json', function (request, response) {
     sheetIndex = request.query.sheetNumber - 1
 
